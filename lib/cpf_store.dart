@@ -12,6 +12,9 @@ class CpfStore with ChangeNotifier {
   List<int> _createInitialNumbers() {
     List<int> cpf = List.generate(9, (index) => Random().nextInt(10));
 
+    if (cpf.join("") == "123456789") {
+      _createInitialNumbers();
+    }
     if (cpf.toSet().toList().length == 1) {
       _createInitialNumbers();
     }
