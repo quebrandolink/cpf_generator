@@ -1,6 +1,5 @@
 import 'package:cpf_generator/cpf_store.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class CpfPage extends StatefulWidget {
   const CpfPage({Key? key}) : super(key: key);
@@ -11,9 +10,6 @@ class CpfPage extends StatefulWidget {
 
 class _CpfPageState extends State<CpfPage> {
   final store = CpfStore();
-  Future<void> _copyToClipboard(String text) async {
-    await Clipboard.setData(ClipboardData(text: text));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +79,7 @@ class _CpfPageState extends State<CpfPage> {
                                         ? const SizedBox()
                                         : IconButton(
                                             onPressed: () {
-                                              _copyToClipboard(store.cpf);
+                                              store.copyToClipboard(store.cpf);
 
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(SnackBar(

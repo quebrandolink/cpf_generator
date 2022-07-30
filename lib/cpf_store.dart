@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:cpf_generator/utils/locales_cpf.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 class CpfStore with ChangeNotifier {
   String _cpf = "";
@@ -8,6 +9,10 @@ class CpfStore with ChangeNotifier {
 
   String get cpf => _cpf;
   String get locale => _localeCpf;
+
+  Future<void> copyToClipboard(String text) async {
+    await Clipboard.setData(ClipboardData(text: text));
+  }
 
   List<int> _createInitialNumbers() {
     List<int> cpf = List.generate(9, (index) => Random().nextInt(10));
