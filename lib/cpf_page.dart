@@ -22,6 +22,7 @@ class _CpfPageState extends State<CpfPage> {
         child: AnimatedBuilder(
           animation: store,
           builder: (_, __) {
+            print("aqui ");
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,41 +64,74 @@ class _CpfPageState extends State<CpfPage> {
                                         Theme.of(context).textTheme.titleLarge),
                               ],
                             )
-                          : Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SelectableText(
-                                      store.cpf,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displaySmall,
+                          : SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    width: 250,
+                                    height: 50,
+                                    child: CheckboxListTile(
+                                      value: store.masked,
+                                      checkboxShape: const CircleBorder(),
+                                      onChanged: (value) =>
+                                          store.setMasked(value ?? false),
+                                      title: const Text("INSERIR PONTOS"),
                                     ),
-                                    const SizedBox(width: 10),
-                                    store.cpf.isEmpty
-                                        ? const SizedBox()
-                                        : IconButton(
-                                            onPressed: () {
-                                              store.copyToClipboard(store.cpf);
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      AnimatedDefaultTextStyle(
+                                        curve: Curves.bounceInOut,
+                                        style: store.cpf.isEmpty
+                                            ? Theme.of(context)
+                                                .textTheme
+                                                .displaySmall!
+                                                .copyWith(fontSize: 40)
+                                            : Theme.of(context)
+                                                .textTheme
+                                                .displaySmall!
+                                                .copyWith(
+                                                    color: Colors.black,
+                                                    fontSize: 45),
+                                        duration:
+                                            const Duration(milliseconds: 400),
+                                        child: SelectableText(
+                                          (store.masked)
+                                              ? store.insertMask()
+                                              : store.cpf,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      IconButton(
+                                        tooltip: "Copiar CPF",
+                                        onPressed: () {
+                                          store.copyToClipboard(
+                                            (store.masked)
+                                                ? store.insertMask()
+                                                : store.cpf,
+                                          );
 
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    'CPF: ${store.cpf} \nCopiado com sucesso!'),
-                                              ));
-                                            },
-                                            icon:
-                                                const Icon(Icons.copy_rounded),
-                                          ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  store.locale,
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                              ],
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: Text(
+                                                'CPF: ${(store.masked) ? store.insertMask() : store.cpf} \nCopiado com sucesso!'),
+                                          ));
+                                        },
+                                        icon: const Icon(Icons.copy_rounded),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    store.locale,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                ],
+                              ),
                             ),
                     ),
                   ),

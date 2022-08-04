@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:cpf_generator/utils/locales_cpf.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/services.dart';
 class CpfStore with ChangeNotifier {
   String _cpf = "";
   String _localeCpf = "";
+  bool masked = false;
 
   String get cpf => _cpf;
   String get locale => _localeCpf;
@@ -18,13 +20,13 @@ class CpfStore with ChangeNotifier {
     List<int> cpf = List.generate(9, (index) => Random().nextInt(10));
 
     if (cpf.join("") == "123456789") {
-      _createInitialNumbers();
+      return _createInitialNumbers();
     }
     if (cpf.toSet().toList().length == 1) {
-      _createInitialNumbers();
+      return _createInitialNumbers();
     }
     if (cpf[0] == 0) {
-      _createInitialNumbers();
+      return _createInitialNumbers();
     }
 
     return cpf;
@@ -43,6 +45,17 @@ class CpfStore with ChangeNotifier {
     int rest = sum % 11;
 
     return rest < 2 ? 0 : (11 - rest);
+  }
+
+  void setMasked(bool value) {
+    masked = value;
+    notifyListeners();
+  }
+
+  String insertMask() {
+    String cpfMasked =
+        "${_cpf.substring(0, 3)}.${_cpf.substring(3, 6)}.${_cpf.substring(6, 9)}-${_cpf.substring(9)}";
+    return cpfMasked;
   }
 
   void generate() {
