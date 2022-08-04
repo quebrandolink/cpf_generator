@@ -22,7 +22,6 @@ class _CpfPageState extends State<CpfPage> {
         child: AnimatedBuilder(
           animation: store,
           builder: (_, __) {
-            print("aqui ");
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
